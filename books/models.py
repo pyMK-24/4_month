@@ -28,8 +28,13 @@ class BookModel(models.Model):
         verbose_name='книга'
         verbose_name_plural='книги'
     
+class Review(models.Model):
+    choice_book = models.ForeignKey(BookModel, on_delete=models.CASCADE, related_name='books')
+    name = models.CharField(max_length=100,default='Иванов Иван Иванович')
+    review_text = models.TextField(default='Хороший фильм')
+    created_at = models.DateField(auto_now=True)
     
-    
+
     
     
     
