@@ -32,7 +32,7 @@
     <h5>Оставить комментарий:</h5>
     <form method="POST">
         {% csrf_token %} 
-        {{ from.as_p }}
+        {{ form.as_p }}
         <button type="submit">Отправить</button>
     </form>
 </div>
