@@ -18,15 +18,23 @@
         </div>
     </div>
 
-    <!-- Блок для комментариев -->
-    {% for i in book_id.books.all %}
-    <div class="comment-section">
-        <h5>Комментарии</h5>
-        <div class="comment">
-            <p> {{ i.created_at }}:{{ i.name }}: {{ i.review_text}}</p>
+    <h5>Комментарии</h5>
+    <div class="comments-list">
+        {% for comment in book_id.choice_book.all %}
+        <div class="comment-section">
+            <p> {{ comment.created_at }}: {{ comment.text_review }} <strong>Оценка:</strong> {{ comment.stars }} </p>
         </div>
+        {% empty %}
+            <p>Комментариев нету пока что</p>
+        {% endfor %}
     </div>
-    {% endfor %}
+
+    <h5>Оставить комментарий:</h5>
+    <form method="POST">
+        {% csrf_token %} 
+        {{ from.as_p }}
+        <button type="submit">Отправить</button>
+    </form>
 </div>
 
 {% include 'components/footer.html' %}

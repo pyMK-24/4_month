@@ -29,11 +29,20 @@ class BookModel(models.Model):
         verbose_name_plural='книги'
     
 class Review(models.Model):
-    choice_book = models.ForeignKey(BookModel, on_delete=models.CASCADE, related_name='books')
-    name = models.CharField(max_length=100,default='Иванов Иван Иванович')
-    review_text = models.TextField(default='Хороший фильм')
+    STARS = (
+        ("🌟", "🌟"),
+        ("🌟🌟", "🌟🌟"),
+        ("🌟🌟🌟", "🌟🌟🌟"),
+        ("🌟🌟🌟🌟", "🌟🌟🌟🌟"),
+        ("🌟🌟🌟🌟🌟", "🌟🌟🌟🌟🌟"),
+    )
+    choice_book = models.ForeignKey(BookModel, on_delete=models.CASCADE, related_name='choice_book')
     created_at = models.DateField(auto_now=True)
+    text_review = models.TextField(default='Хороший фильм')
+    stars = models.CharField(max_length=10, choices=STARS,default='🌟🌟')
     
+    def __str__(self):
+        return f'{self.stars}-{self.choice_book.title}'
 
     
     
