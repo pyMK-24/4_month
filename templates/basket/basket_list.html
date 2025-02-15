@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина</title>
+</head>
+<body>
+
+<h1>Список товаров в корзине</h1>
+<ul>
+  {% for i in basket_lst %}
+  <li>
+    <p>{{ i.title }}</p>
+    <p>{{ i.author }}</p>
+    <p>{{ i.price }} ₽</p>
+    <p>{{ i.choice_status }}</p>
+    <p>{{ i.created_at }}</p>
+    <button><a href="/basket_list/{{ i.id }}/delete/">Удалить</a></button>
+    <button><a href="/basket_list/{{ i.id }}/update/">Редактировать</a></button>
+  </li>
+  {% endfor %}
+</ul>
+
+</body>
+</html>
