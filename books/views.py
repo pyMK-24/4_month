@@ -1,16 +1,26 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from django.http import HttpResponse
 from datetime import datetime
 from . import models,forms
-from django.shortcuts import redirect
+from django.views import generic
 
-def book_list_view(request):
-    if request.method == 'GET':
-        query = models.BookModel.objects.all().order_by('-id')
-        context_object_name = {
-            'book': query,
-        }
-        return render(request, template_name='book.html',context=context_object_name)
+class SearchView(generic.ListView):
+    template_name = 'book.html'
+    
+    def get_queryset(self):
+        return models.BookModel.objects.filter(title__icontains=self.request.GET.get('q'))
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['q'] = self.request.GET.get('q')
+        return context
+    
+class BookListView(generic.ListView):
+    template_name = 'book.html'
+    model = models.BookModel
+    
+    def get_queryset(self):
+        return self.model.objects.all()
 
 def book_detail_view(request,id):
     if request.method == 'GET':

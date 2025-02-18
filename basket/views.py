@@ -1,41 +1,47 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from . import models,forms
+from django.views import generic
 
-def basket_list(request):
-    if request.method == 'GET':
-        query = models.BasketModel.objects.all()
-        context_object_name = {
-            'basket_lst': query
-        }
-        return render(request,template_name='basket/basket_list.html',context=context_object_name)
+class BasketListView(generic.ListView):
+    template_name='basket/basket_list.html'
+    context_object_name = 'basket_lst'
+    model = models.BasketModel
+    
+    def  get_queryset(self):
+        return self.model.objects.all().order_by('-id')
+    
+    
 
-def create_basket(request):
-    if request.method == 'POST':
-        form = forms.BasketForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('basket_lst')
-    else:
-        form = forms.BasketForm()
-    return render(request, template_name='basket/create_basket.html',context={'form': form})
+class CreateBasketView(generic.CreateView):
+    template_name='basket/create_basket.html'
+    form_class = forms.BasketForm
+    success_url = '/basket_list/'
 
-def delete_basket_view(requst,id):
-    basket_id = get_object_or_404(models.BasketModel, id=id)
-    basket_id.delete()
-    return redirect('basket_lst')
-
-def update_basket_view(request,id):
-    basket_id = get_object_or_404(models.BasketModel,id=id)
-    if request.method == 'POST':
-        form =  forms.BasketForm(request.POST,instance=basket_id)
-        if form.is_valid():
-            form.save()
-    else:
-        form = forms.BasketForm(instance=basket_id)
-    return render(request,template_name='basket/update_basket.html',context={'form':form,
-                                                                             'basket_id': basket_id,
-                                                                             })
-        
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super(CreateBasketView, self).form_valid(form=form)
+    
+class DeleteBasketView(generic.DeleteView):
+    template_name = 'basket/confirm_delete.html'
+    success_url = '/basket_list/'
+    
+    def get_object(self, *args, **kwargs):
+        basket_id = self.kwargs.get('id')
+        return get_object_or_404(models.BasketModel, id=basket_id)
+    
+class UpdateBasketView(generic.UpdateView):
+    template_name='basket/update_basket.html'
+    form_class = forms.BasketForm
+    success_url = '/basket_list/'
+    
+    def get_object(self, *args, **kwargs):
+        basket_id = self.kwargs.get('id')
+        return get_object_or_404(models.BasketModel, id=basket_id)
+    
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super(UpdateBasketView, self).form_valid(form=form)
+                
         
         
         
