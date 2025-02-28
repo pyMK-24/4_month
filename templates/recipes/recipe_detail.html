@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Детали рецепта</title>
+</head>
+<body>
+    <h1>{{ recipe.title }}</h1>
+    <p>{{ recipe.description }}</p>
+
+    <h2>Ингредиенты</h2>
+    <ul>
+        {% for ingredient in recipe.ingredientmodel_set.all %}
+            <li>{{ ingredient.name }} - {{ ingredient.quantity }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'create_ingredient' recipe_pk=recipe.pk %}">Добавить ингредиент</a>
+    <a href="{% url 'delete_recipe' pk=recipe.pk %}">Удалить рецепт</a>
+</body>
+</html>
